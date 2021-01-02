@@ -8,6 +8,8 @@
 #include "debughelper.h"
 #endif
 
+#include "otp.h"
+
 using namespace Enums;
 
 /**
@@ -62,22 +64,24 @@ void ImitatePass::GitPush() {
  * @brief ImitatePass::Show shows content of file
  */
 void ImitatePass::Show(QString file) {
+  show(PASS_SHOW, file);
+}
+
+/**
+ * @brief ImitatePass::Show shows content of file
+ */
+void ImitatePass::show(PROCESS id, QString file) {
   file = QtPassSettings::getPassStore() + file + ".gpg";
   QStringList args = {"-d",      "--quiet",     "--yes",   "--no-encrypt-to",
                       "--batch", "--use-agent", pgpg(file)};
-  executeGpg(PASS_SHOW, args);
+  executeGpg(id, args);
 }
 
 /**
  * @brief ImitatePass::OtpGenerate generates an otp code
  */
 void ImitatePass::OtpGenerate(QString file) {
-#ifdef QT_DEBUG
-  dbg() << "No OTP generation code for fake pass yet, attempting for file: " +
-               file;
-#else
-  Q_UNUSED(file)
-#endif
+  show(PASS_OTP_GENERATE, file);
 }
 
 /**
@@ -504,7 +508,13 @@ void ImitatePass::finished(int id, int exitCode, const QString &out,
       pid = transactionIsOver(static_cast<PROCESS>(id));
     }
   }
-  Pass::finished(pid, exitCode, transactionOutput, err);
+  if (pid == PASS_OTP_GENERATE) {
+    Otp otp = Otp(transactionOutput);
+    transactionOutput = otp.Generate();
+    Pass::finished(pid, exitCode, transactionOutput, err);
+  } else {
+    Pass::finished(pid, exitCode, transactionOutput, err);
+  }
   transactionOutput.clear();
 }
 

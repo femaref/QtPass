@@ -42,6 +42,7 @@ protected:
                               const QStringList &args, QString input,
                               bool readStdout = true,
                               bool readStderr = true) Q_DECL_OVERRIDE;
+  void show(PROCESS id, QString file);
 
 public:
   ImitatePass();
