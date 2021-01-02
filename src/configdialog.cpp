@@ -562,11 +562,7 @@ bool ConfigDialog::isQrencodeAvailable() {
 }
 
 bool ConfigDialog::isPassOtpAvailable() {
-#ifdef Q_OS_WIN
-  return false;
-#else
   return true;
-#endif
 }
 
 /**
