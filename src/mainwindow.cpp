@@ -1175,12 +1175,9 @@ void MainWindow::updateGitButtonVisibility() {
 }
 
 void MainWindow::updateOtpButtonVisibility() {
-#if defined(Q_OS_WIN) || defined(__APPLE__)
-  ui->actionOtp->setVisible(false);
-#endif
-  if (!QtPassSettings::isUseOtp())
-    ui->actionOtp->setEnabled(false);
-  else
+    // TODO: set this according to the settings
+    // if using GPG directly -> enable as we provide that functionality in ImitatePass
+    // if using pass -> only enable when "use pass-otp" checked
     ui->actionOtp->setEnabled(true);
 }
 
