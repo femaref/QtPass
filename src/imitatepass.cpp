@@ -10,6 +10,8 @@
 
 #include "otp.h"
 
+#include <stdexcept>
+
 using namespace Enums;
 
 /**

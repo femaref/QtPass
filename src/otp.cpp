@@ -9,6 +9,8 @@
 #include "otp.h"
 #include "sha1.h"
 
+#include <stdexcept>
+
 using namespace std;
 
 
