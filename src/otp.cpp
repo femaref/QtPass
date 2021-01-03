@@ -17,21 +17,30 @@ Bytes::ByteString hmacSha1_64(const Bytes::ByteString & key, const Bytes::ByteSt
 	return hmacSha1(key, msg, 64);
 }
 
-Otp::Otp(QString otpurl) {
+Otp Otp::Create(QString otpurl) {
     otpurl = otpurl.trimmed();
     QUrl url = QUrl(otpurl);
     if (url.scheme() != "otpauth") {
+		throw std::invalid_argument("url not of otpauth scheme");
     }
 
     QUrlQuery query = QUrlQuery(url);
 
     if (!query.hasQueryItem("secret")) {
+		throw std::invalid_argument("no query param secret");
     }
 
     QString secret = query.queryItemValue("secret");
 
-	std::string normalizedSecret = normalizedBase32String(secret.toStdString());
-	this->secret = Bytes::fromUnpaddedBase32(normalizedSecret);    
+	std::string normalizedSecret = Otp::normalizedBase32String(secret.toStdString());
+
+	Otp o = Otp(Bytes::fromUnpaddedBase32(normalizedSecret));
+
+	return o;
+}
+
+Otp::Otp(const Bytes::ByteString & key) {
+	this->secret = key;
 }
 
 QString Otp::Generate() {

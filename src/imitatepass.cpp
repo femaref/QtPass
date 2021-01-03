@@ -509,9 +509,13 @@ void ImitatePass::finished(int id, int exitCode, const QString &out,
     }
   }
   if (pid == PASS_OTP_GENERATE) {
-    Otp otp = Otp(transactionOutput);
-    transactionOutput = otp.Generate();
-    Pass::finished(pid, exitCode, transactionOutput, err);
+    try {
+      Otp otp = Otp::Create(transactionOutput);
+      transactionOutput = otp.Generate();
+      Pass::finished(pid, exitCode, transactionOutput, err);
+    } catch (std::invalid_argument ia) {
+       Pass::finished(pid, exitCode, QString(ia.what()), err);
+    }
   } else {
     Pass::finished(pid, exitCode, transactionOutput, err);
   }
