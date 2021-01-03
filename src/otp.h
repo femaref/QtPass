@@ -15,7 +15,7 @@ protected:
     uint32_t hotp(const Bytes::ByteString & key, uint64_t counter, size_t digitCount, HmacFunc hmacf);
     uint32_t totp(const Bytes::ByteString & key, uint64_t timeNow, uint64_t timeStart, uint64_t timeStep, size_t digitCount, HmacFunc hmacf);
 
-    std::string normalizedBase32String(const std::string & unnorm);
+    static std::string normalizedBase32String(const std::string & unnorm);
 
 
 public:
