@@ -668,9 +668,9 @@ void MainWindow::onDelete() {
 void MainWindow::onOtp() {
   QString file = getFile(ui->treeView->currentIndex(), true);
   if (!file.isEmpty()) {
-    if (QtPassSettings::isUseOtp())
-      QtPassSettings::getPass()->OtpGenerate(file);
+    QtPassSettings::getPass()->OtpGenerate(file);
   }
+
 }
 
 /**
